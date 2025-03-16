@@ -6,7 +6,7 @@ import pytz
 import timezone_field
 
 from django.conf import settings
-from django_tenants.utils import get_tenant_model, get_public_schema_name
+from django_tenants.utils import get_tenant_model, connection
 from django_tenants_celery_beat.utils import get_periodic_task_tenant_link_model
 
 
@@ -95,6 +95,7 @@ def align(instance, **kwargs):
         headers = json.loads(instance.headers)
         schema_name = headers.get("_schema_name", get_public_schema_name())
         use_tenant_timezone = headers.get("_use_tenant_timezone", False)
+        schema_name = headers.get("_schema_name", connection.tenant.schema_name)
         get_periodic_task_tenant_link_model().objects.create(
             periodic_task=instance,
             # Assumes the public schema has been created already
