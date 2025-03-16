@@ -93,9 +93,8 @@ def align(instance, **kwargs):
             instance.periodic_task_tenant_link.save()
     else:
         headers = json.loads(instance.headers)
-        schema_name = headers.get("_schema_name", get_public_schema_name())
-        use_tenant_timezone = headers.get("_use_tenant_timezone", False)
         schema_name = headers.get("_schema_name", connection.tenant.schema_name)
+        use_tenant_timezone = headers.get("_use_tenant_timezone", False)
         get_periodic_task_tenant_link_model().objects.create(
             periodic_task=instance,
             # Assumes the public schema has been created already
